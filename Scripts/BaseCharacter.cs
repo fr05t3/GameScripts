@@ -8,7 +8,7 @@ public class BaseCharacter : MonoBehaviour {
 	public int MoveSpeed = 30;
 	public Vector3 Coordinates;
 	public GameController ControllerInstance;
-	public GameTile TileOcscupied;
+	public GameTile TileOccupied;
 	public List<GameTile> MoveableTiles = new List<GameTile> ();
 
 	Color startColor;
