@@ -9,13 +9,13 @@ public class BaseCharacter : MonoBehaviour {
 	public Vector3 Coordinates;
 	public GameController ControllerInstance;
 	public GameTile TileOccupied;
-	public List<GameTile> MoveableTiles = new List<GameTile> ();
+	public List<GameTile> MovableTiles = new List<GameTile> ();
 
 	Color startColor;
 	bool isHighlighted;
 
 	// Returns true if tile is within range, and not occupied
-	public bool IsTileMoveable(GameTile tile)
+	public bool IsTileMovable(GameTile tile)
 	{
 		bool isInRange = Mathf.Abs ((float)tile.Coordinates.x - (float)Coordinates.x) <=  GetMoveThreshhold () 
 			&& Mathf.Abs ((float)tile.Coordinates.z - (float)Coordinates.z)  <= GetMoveThreshhold ();
@@ -25,7 +25,7 @@ public class BaseCharacter : MonoBehaviour {
 	//  Returns true if character moves to tile, false otherwise
 	public bool MoveToTile(GameTile tile)
 	{
-		bool willMove = IsTileMoveable (tile);
+		bool willMove = IsTileMovable (tile);
 
 		if (willMove) {
 			// Get tile 'floor'
@@ -55,9 +55,9 @@ public class BaseCharacter : MonoBehaviour {
 		return (MoveSpeed / tileWidth);
 	}
 
-	public void ResetMoveableTiles() 
+	public void ResetMovableTiles() 
 	{
-		foreach (GameTile tile in MoveableTiles) {
+		foreach (GameTile tile in MovableTiles) {
 			tile.IsSelected = false;
 			tile.ChangeMaterial ();
 		}
