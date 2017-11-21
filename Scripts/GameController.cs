@@ -53,6 +53,9 @@ public class GameController : MonoBehaviour {
 
 	void Update(){
 		if (SelectedCharacter != null) {
+			if (SelectedCharacter.MovableTiles == null) {
+
+			}
 			HighlightMovableTiles (SelectedCharacter);
 		}
 	}
@@ -67,23 +70,25 @@ public class GameController : MonoBehaviour {
 		GameTile tileInstance = tile.GetComponent<GameTile>();
 		BaseCharacter baseCharacter = character.GetComponent<BaseCharacter>();
 
+		// Unhighlight current tiles
+		baseCharacter.ResetMovableTiles();
+
 		// Move character to tile
 		if (!baseCharacter.MoveToTile (tileInstance)) {
 			DeselectItems ();
-		}
-
-		// Remake movable tiles list
-		baseCharacter.ResetMovableTiles();
-		baseCharacter.MovableTiles.Clear ();
-		int moveThreshhold = baseCharacter.GetMoveThreshhold ();
-		// Reindex character movable tiles
-		for (int i = (int)baseCharacter.Coordinates.x - moveThreshhold; i <= (int)baseCharacter.Coordinates.x + moveThreshhold; i++) {
-			for (int j = (int)baseCharacter.Coordinates.z - moveThreshhold; j <= (int)baseCharacter.Coordinates.z + moveThreshhold; j++) {
-				if(isTileInBounds(i, j) && baseCharacter.IsTileMovable(tileInstance)){
-					GameTile curTile = Board [i, j].GetComponent<GameTile> ();
-					curTile.IsSelected = true;
-					curTile.ChangeMaterial();
-					baseCharacter.MovableTiles.Add (curTile);
+		} else {
+			// Remake movable tiles list
+			baseCharacter.MovableTiles.Clear ();
+			int moveThreshhold = baseCharacter.GetMoveThreshhold ();
+			// Reindex character movable tiles
+			for (int i = (int)baseCharacter.Coordinates.x - moveThreshhold; i <= (int)baseCharacter.Coordinates.x + moveThreshhold; i++) {
+				for (int j = (int)baseCharacter.Coordinates.z - moveThreshhold; j <= (int)baseCharacter.Coordinates.z + moveThreshhold; j++) {
+					if(isTileInBounds(i, j) && baseCharacter.IsTileMovable(tileInstance)){
+						GameTile curTile = Board [i, j].GetComponent<GameTile> ();
+						curTile.IsSelected = true;
+						curTile.ChangeMaterial();
+						baseCharacter.MovableTiles.Add (curTile);
+					}
 				}
 			}
 		}
@@ -92,6 +97,7 @@ public class GameController : MonoBehaviour {
 	void HighlightMovableTiles(BaseCharacter character) 
 	{
 		foreach (GameTile tile in character.MovableTiles) {
+			tile.IsSelected = true;
 			tile.ChangeMaterial ();
 		}
 	}
