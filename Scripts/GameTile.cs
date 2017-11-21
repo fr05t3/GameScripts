@@ -12,6 +12,8 @@ public class GameTile : MonoBehaviour {
 	public bool IsSelected;
 	public GameController ControllerInstance;
 
+	bool isMouseOver = false;
+
 	public void ChangeTerrain (TerrainTypes type)
 	{
 		Terrain = type;
@@ -29,13 +31,25 @@ public class GameTile : MonoBehaviour {
 		ControllerInstance.TryMove ();
 	}
 
+	void OnMouseEnter()
+	{
+		isMouseOver = true;
+	}
+
+	void OnMouseExit()
+	{
+		isMouseOver = false;
+	}
+
 	// Helper for selecting terrain appearence
 	public void ChangeMaterial()
 	{
 		Renderer rend = GetComponent<Renderer> ();
 		rend.material.shader = Shader.Find ("Specular");
 
-		if (IsSelected) {
+		if (isMouseOver){
+			rend.material.SetColor ("_Color", Color.black);
+		} else if (IsSelected) {
 			rend.material.SetColor ("_Color", Color.red);
 		} else if (Terrain == TerrainTypes.FlatLand) {
 			rend.material.SetColor ("_Color", Color.yellow);

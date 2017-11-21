@@ -48,12 +48,15 @@ public class GameController : MonoBehaviour {
 		pc.ControllerInstance = this;
 		pc.TileOccupied = Board [0, 0].GetComponent<GameTile>();
 		MoveCharacterToTile (pc.gameObject, Board [0, 0]);
-		pc.ResetMoveableTiles ();
+		pc.ResetMovableTiles ();
 	}
 
 	void Update(){
 		if (SelectedCharacter != null) {
-			HighlightMoveableTiles (SelectedCharacter);
+			if (SelectedCharacter.MovableTiles == null) {
+
+			}
+			HighlightMovableTiles (SelectedCharacter);
 		}
 	}
 
@@ -67,31 +70,34 @@ public class GameController : MonoBehaviour {
 		GameTile tileInstance = tile.GetComponent<GameTile>();
 		BaseCharacter baseCharacter = character.GetComponent<BaseCharacter>();
 
+		// Unhighlight current tiles
+		baseCharacter.ResetMovableTiles();
+
 		// Move character to tile
 		if (!baseCharacter.MoveToTile (tileInstance)) {
 			DeselectItems ();
-		}
-
-		// Remake moveable tiles list
-		baseCharacter.ResetMoveableTiles();
-		baseCharacter.MoveableTiles.Clear ();
-		int moveThreshhold = baseCharacter.GetMoveThreshhold ();
-		// Reindex character moveable tiles
-		for (int i = (int)baseCharacter.Coordinates.x - moveThreshhold; i <= (int)baseCharacter.Coordinates.x + moveThreshhold; i++) {
-			for (int j = (int)baseCharacter.Coordinates.z - moveThreshhold; j <= (int)baseCharacter.Coordinates.z + moveThreshhold; j++) {
-				if(isTileInBounds(i, j) && baseCharacter.IsTileMoveable(tileInstance)){
-					GameTile curTile = Board [i, j].GetComponent<GameTile> ();
-					curTile.IsSelected = true;
-					curTile.ChangeMaterial();
-					baseCharacter.MoveableTiles.Add (curTile);
+		} else {
+			// Remake movable tiles list
+			baseCharacter.MovableTiles.Clear ();
+			int moveThreshhold = baseCharacter.GetMoveThreshhold ();
+			// Reindex character movable tiles
+			for (int i = (int)baseCharacter.Coordinates.x - moveThreshhold; i <= (int)baseCharacter.Coordinates.x + moveThreshhold; i++) {
+				for (int j = (int)baseCharacter.Coordinates.z - moveThreshhold; j <= (int)baseCharacter.Coordinates.z + moveThreshhold; j++) {
+					if(isTileInBounds(i, j) && baseCharacter.IsTileMovable(tileInstance)){
+						GameTile curTile = Board [i, j].GetComponent<GameTile> ();
+						curTile.IsSelected = true;
+						curTile.ChangeMaterial();
+						baseCharacter.MovableTiles.Add (curTile);
+					}
 				}
 			}
 		}
 	}
 
-	void HighlightMoveableTiles(BaseCharacter character) 
+	void HighlightMovableTiles(BaseCharacter character) 
 	{
-		foreach (GameTile tile in character.MoveableTiles) {
+		foreach (GameTile tile in character.MovableTiles) {
+			tile.IsSelected = true;
 			tile.ChangeMaterial ();
 		}
 	}
