@@ -34,11 +34,13 @@ public class GameTile : MonoBehaviour {
 	void OnMouseEnter()
 	{
 		isMouseOver = true;
+		ChangeMaterial ();
 	}
 
 	void OnMouseExit()
 	{
 		isMouseOver = false;
+		ChangeMaterial ();
 	}
 
 	// Helper for selecting terrain appearence
